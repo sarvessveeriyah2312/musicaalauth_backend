@@ -105,6 +105,28 @@ app.get('/gestures/:userId', (req, res) => {
     });
 });
 
+// **Health Check Endpoint**
+app.get('/health', (req, res) => {
+    // Check database connection
+    db.ping((err) => {
+        if (err) {
+            return res.status(500).json({
+                status: 'error',
+                message: 'Server is running, but database connection failed.',
+                error: err.message,
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Server is healthy!',
+            serverTime: new Date().toISOString(),
+            database: 'Connected',
+        });
+    });
+});
+
+
 // **Randomize Gesture Mappings After Login**
 app.post('/randomize-gestures/:userId', (req, res) => {
     const { userId } = req.params;
